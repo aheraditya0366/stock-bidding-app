@@ -128,7 +128,7 @@ const BidForm: React.FC<BidFormProps> = ({
     }).format(amount);
   };
 
-  const activeBids = userBids.filter(bid => bid.status === 'active' || !bid.status);
+  const activeBids = userBids.filter(bid => (bid as any).status === 'active' || !(bid as any).status);
 
   if (!isActive) {
     return (

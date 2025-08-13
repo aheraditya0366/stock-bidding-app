@@ -1,11 +1,10 @@
 import React from 'react';
-import { 
-  User, 
-  TrendingUp, 
-  TrendingDown, 
-  Target, 
-  Award, 
-  DollarSign,
+import {
+  User,
+  TrendingUp,
+  TrendingDown,
+  Target,
+  Award,
   Phone,
   Mail,
   Calendar,

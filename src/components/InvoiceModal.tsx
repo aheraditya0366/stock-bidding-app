@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Download, Share, MessageCircle } from 'lucide-react';
+import { X, Share, MessageCircle } from 'lucide-react';
 
 interface Invoice {
   item: string;

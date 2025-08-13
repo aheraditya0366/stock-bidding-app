@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { History, TrendingUp, TrendingDown, Filter, User, Clock, DollarSign } from 'lucide-react';
+import { History, Filter, User, Clock } from 'lucide-react';
 
 interface Bid {
   id: string;

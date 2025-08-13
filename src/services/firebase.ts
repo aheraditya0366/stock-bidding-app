@@ -15,8 +15,7 @@ import {
   RecaptchaVerifier,
   signInWithPhoneNumber,
   PhoneAuthProvider,
-  signInWithCredential,
-  onAuthStateChanged
+  signInWithCredential
 } from 'firebase/auth';
 import {
   getFirestore,
@@ -34,9 +33,7 @@ import {
   serverTimestamp,
   setDoc,
   getDoc,
-  where,
-  deleteDoc,
-  Timestamp
+  where
 } from 'firebase/firestore';
 import { getAnalytics } from 'firebase/analytics';
 

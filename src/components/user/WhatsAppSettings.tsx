@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  MessageCircle, 
-  Phone, 
-  Send, 
-  CheckCircle, 
-  AlertCircle, 
-  Settings,
+import {
+  MessageCircle,
+  Phone,
+  Send,
+  CheckCircle,
+  AlertCircle,
   Bell,
   Shield
 } from 'lucide-react';

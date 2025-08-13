@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Clock, AlertCircle, CheckCircle, Play, Pause } from 'lucide-react';
+import { Clock, AlertCircle, CheckCircle, Pause } from 'lucide-react';
 
 interface TimerProps {
   endTime: number;
