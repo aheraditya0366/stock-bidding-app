@@ -125,68 +125,106 @@ interface AuctionProviderProps {
 export const AuctionProvider: React.FC<AuctionProviderProps> = ({ children }) => {
   const [state, dispatch] = useReducer(auctionReducer, initialState);
 
-  // Initialize authentication
+  // Initialize authentication - Preserve session on refresh, clear on new visits
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+    const initializeAuth = async () => {
       try {
-        if (firebaseUser) {
-          // User is signed in - load complete profile from Firestore
-          console.log('🔐 User authenticated, loading profile:', firebaseUser.uid);
+        // Check if this is a page refresh or new visit
+        const isPageRefresh = sessionStorage.getItem('app_session_active') === 'true';
 
-          try {
-            // Try to get user data from Firestore
-            const userProfile = await firebaseService.getUserProfile(firebaseUser.uid);
-
-            if (userProfile) {
-              // User profile exists in Firestore
-              console.log('📋 User profile loaded from Firestore:', userProfile);
-              dispatch({ type: 'SET_USER', payload: userProfile });
-            } else {
-              // Create new user profile in Firestore
-              console.log('👤 Creating new user profile in Firestore');
-              const newUserData = {
-                uid: firebaseUser.uid,
-                email: firebaseUser.email || '',
-                displayName: firebaseUser.displayName || firebaseUser.email?.split('@')[0] || 'User',
-                phoneNumber: '', // Will be empty until user adds it
-                totalBids: 0,
-                totalProfit: 0,
-                createdAt: new Date() // Use Date object for consistency
-              };
-
-              await firebaseService.createUserProfile(newUserData);
-              dispatch({ type: 'SET_USER', payload: newUserData });
-              console.log('✅ New user profile created');
-            }
-          } catch (profileError) {
-            console.warn('⚠️ Failed to load user profile from Firestore:', profileError);
-            // Fallback to basic user data from Firebase Auth
-            const fallbackUserData = {
-              uid: firebaseUser.uid,
-              email: firebaseUser.email || '',
-              displayName: firebaseUser.displayName || firebaseUser.email?.split('@')[0] || 'User',
-              phoneNumber: '', // Will be empty until user adds it
-              totalBids: 0,
-              totalProfit: 0,
-              createdAt: new Date()
-            };
-            dispatch({ type: 'SET_USER', payload: fallbackUserData });
-          }
+        if (isPageRefresh) {
+          // This is a page refresh - preserve existing authentication
+          console.log('🔄 Page refresh detected - preserving authentication state');
         } else {
-          // User is signed out
-          console.log('🚪 User signed out');
-          dispatch({ type: 'SET_USER', payload: null });
+          // This is a new visit - clear any existing sessions
+          console.log('🔄 New app visit - ensuring clean authentication state');
+          console.log('🔐 Clearing any existing sessions for fresh start');
+          await firebaseService.signOut();
+          console.log('✅ Previous session cleared - fresh start');
         }
-      } catch (error) {
-        console.error('❌ Auth state change error:', error);
-        toast.error('Authentication error occurred');
-      } finally {
-        // Mark auth as initialized regardless of success/failure
-        dispatch({ type: 'SET_AUTH_INITIALIZED', payload: true });
-      }
-    });
 
-    return () => unsubscribe();
+        // Mark that the app session is now active
+        sessionStorage.setItem('app_session_active', 'true');
+
+        // Set up auth state listener
+        const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+          try {
+            if (firebaseUser) {
+              // User is signed in - load complete profile from Firestore
+              console.log('🔐 User authenticated, loading profile:', firebaseUser.uid);
+
+              try {
+                // Try to get user data from Firestore
+                const userProfile = await firebaseService.getUserProfile(firebaseUser.uid);
+
+                if (userProfile) {
+                  // User profile exists in Firestore
+                  console.log('📋 User profile loaded from Firestore:', userProfile);
+                  dispatch({ type: 'SET_USER', payload: userProfile });
+                } else {
+                  // Create new user profile in Firestore
+                  console.log('👤 Creating new user profile in Firestore');
+                  const newUserData = {
+                    uid: firebaseUser.uid,
+                    email: firebaseUser.email || '',
+                    displayName: firebaseUser.displayName || firebaseUser.email?.split('@')[0] || 'User',
+                    phoneNumber: '', // Will be empty until user adds it
+                    totalBids: 0,
+                    totalProfit: 0,
+                    createdAt: new Date() // Use Date object for consistency
+                  };
+
+                  await firebaseService.createUserProfile(newUserData);
+                  dispatch({ type: 'SET_USER', payload: newUserData });
+                  console.log('✅ New user profile created');
+                }
+              } catch (profileError) {
+                console.warn('⚠️ Failed to load user profile from Firestore:', profileError);
+                // Fallback to basic user data from Firebase Auth
+                const fallbackUserData = {
+                  uid: firebaseUser.uid,
+                  email: firebaseUser.email || '',
+                  displayName: firebaseUser.displayName || firebaseUser.email?.split('@')[0] || 'User',
+                  phoneNumber: '', // Will be empty until user adds it
+                  totalBids: 0,
+                  totalProfit: 0,
+                  createdAt: new Date()
+                };
+                dispatch({ type: 'SET_USER', payload: fallbackUserData });
+              }
+            } else {
+              // User is signed out
+              console.log('🚪 User signed out - showing login page');
+              dispatch({ type: 'SET_USER', payload: null });
+            }
+          } catch (error) {
+            console.error('❌ Auth state change error:', error);
+            toast.error('Authentication error occurred');
+          } finally {
+            // Mark auth as initialized regardless of success/failure
+            dispatch({ type: 'SET_AUTH_INITIALIZED', payload: true });
+          }
+        });
+
+        return unsubscribe;
+      } catch (error) {
+        console.error('❌ Auth initialization error:', error);
+        // Even if there's an error, still initialize auth
+        dispatch({ type: 'SET_AUTH_INITIALIZED', payload: true });
+        dispatch({ type: 'SET_USER', payload: null });
+      }
+    };
+
+    const unsubscribePromise = initializeAuth();
+
+    return () => {
+      // Cleanup auth listener when component unmounts
+      unsubscribePromise.then(unsubscribe => {
+        if (unsubscribe) {
+          unsubscribe();
+        }
+      }).catch(console.error);
+    };
   }, []);
 
   // Initialize Firebase connection
@@ -392,6 +430,9 @@ export const AuctionProvider: React.FC<AuctionProviderProps> = ({ children }) =>
   const logout = async (): Promise<void> => {
     try {
       await firebaseService.signOut();
+      // Clear session storage to ensure login page shows on next visit
+      sessionStorage.removeItem('app_session_active');
+      console.log('🚪 User logged out - session cleared for fresh start next time');
       dispatch({ type: 'RESET_STATE' });
       toast.success('Logged out successfully');
     } catch (error) {

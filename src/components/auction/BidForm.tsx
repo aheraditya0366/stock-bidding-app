@@ -132,26 +132,26 @@ const BidForm: React.FC<BidFormProps> = ({
 
   if (!isActive) {
     return (
-      <div className="bg-white rounded-xl shadow-lg p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Place Bid</h3>
-        <div className="text-center p-8 bg-gray-50 rounded-lg">
-          <AlertCircle className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-          <p className="text-gray-600 font-medium">Auction has ended</p>
-          <p className="text-sm text-gray-500 mt-2">Bidding is no longer available</p>
+      <div className="card-premium p-8">
+        <h3 className="text-xl font-bold text-gray-900 mb-6 text-shadow">Place Bid</h3>
+        <div className="text-center p-10 glass-effect rounded-premium-lg border border-white/20">
+          <AlertCircle className="w-16 h-16 text-gray-400 mx-auto mb-6 animate-pulse" />
+          <p className="text-gray-700 font-semibold text-lg">Auction has ended</p>
+          <p className="text-sm text-gray-500 mt-3">Bidding is no longer available</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-gray-200 hover:border-blue-300 transform hover:-translate-y-1">
-      <h3 className="text-lg font-semibold text-gray-900 mb-6 flex items-center space-x-2">
-        <DollarSign className="w-5 h-5 text-blue-600 animate-pulse" />
+    <div className="card-premium p-8 hover:shadow-premium-lg transition-all duration-500 transform hover:-translate-y-2 border-2 border-white/30 hover:border-blue-300/50">
+      <h3 className="text-xl font-bold text-gray-900 mb-8 flex items-center space-x-3 text-shadow">
+        <DollarSign className="w-6 h-6 text-blue-600 animate-pulse" />
         <span>Place Bid</span>
       </h3>
-      
-      {/* Current Market Info */}
-      <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-200">
+
+      {/* Enhanced Market Info */}
+      <div className="mb-8 p-6 glass-effect rounded-premium border border-white/20 bg-gradient-to-r from-blue-50/50 to-purple-50/50">
         <div className="grid grid-cols-2 gap-4">
           <div>
             <p className="text-xs text-gray-600 mb-1">Current Price</p>
@@ -198,19 +198,18 @@ const BidForm: React.FC<BidFormProps> = ({
 
         {/* Bid Amount Input */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-semibold text-gray-700 mb-3 text-shadow">
             Bid Amount (₹)
           </label>
           <div className="relative group">
-            <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 group-focus-within:text-blue-500 transition-colors duration-200" />
             <input
               type="number"
               value={bidAmount}
               onChange={(e) => setBidAmount(e.target.value)}
-              className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:border-transparent transition-all duration-200 hover:shadow-md focus:shadow-lg transform focus:scale-[1.02] ${
+              className={`input-premium px-4 py-4 text-lg font-medium ${
                 bidAmount && !isValidBid
-                  ? 'border-red-300 focus:ring-red-500 hover:border-red-400'
-                  : 'border-gray-300 focus:ring-blue-500 hover:border-blue-400'
+                  ? 'border-red-300 focus:ring-red-500/20 hover:border-red-400'
+                  : 'border-gray-200 focus:ring-blue-500/20 hover:border-blue-400'
               }`}
               placeholder={`Minimum ₹${minBid.toFixed(2)}`}
               min={minBid}

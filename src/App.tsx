@@ -89,45 +89,56 @@ const AppContent: React.FC = () => {
 
   // Main auction interface
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 relative">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 relative overflow-hidden">
       {/* Animated Background */}
       <AnimatedBackground />
-      {/* Header */}
-      <header className="bg-white shadow-lg border-b border-gray-200 backdrop-blur-sm bg-white/95 sticky top-0 z-50">
+
+      {/* Premium Background Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-blue-500/5 pointer-events-none"></div>
+      {/* Premium Header */}
+      <header className="glass-effect border-b border-white/20 sticky top-0 z-50 shadow-premium">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            {/* Logo */}
-            <div className="flex items-center space-x-3 group">
-              <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-all duration-200 group-hover:rotate-12">
-                <DollarSign className="w-5 h-5 text-white animate-pulse" />
+          <div className="flex items-center justify-between h-20">
+            {/* Enhanced Logo */}
+            <div className="flex items-center space-x-4 group">
+              <div className="w-12 h-12 bg-gradient-to-r from-blue-500 via-purple-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-premium transform group-hover:scale-110 transition-all duration-300 group-hover:rotate-12">
+                <DollarSign className="w-7 h-7 text-white animate-pulse" />
               </div>
-              <h1 className="text-xl font-bold text-gray-900 hover:text-blue-600 transition-colors duration-200 cursor-default">Stock Auction</h1>
+              <div>
+                <h1 className="text-2xl font-bold gradient-text text-shadow cursor-default">Stock Auction</h1>
+                <p className="text-sm text-gray-600 font-medium">Professional Trading Platform</p>
+              </div>
             </div>
 
-            {/* User info and actions */}
-            <div className="flex items-center space-x-4">
-              <div className="text-sm text-gray-600 bg-gray-50 px-3 py-1 rounded-full">
-                Welcome, <span className="font-medium text-gray-900 hover:text-blue-600 transition-colors duration-200">{state.user.displayName}</span>
+            {/* Enhanced User info and actions */}
+            <div className="flex items-center space-x-6">
+              <div className="glass-effect px-4 py-2 rounded-premium border border-white/20">
+                <span className="text-sm text-gray-600">Welcome, </span>
+                <span className="font-semibold text-gray-900 hover:text-blue-600 transition-colors duration-200">{state.user.displayName}</span>
               </div>
-              <button
-                onClick={() => setShowSettings(!showSettings)}
-                className="p-2 text-gray-400 hover:text-blue-600 rounded-lg hover:bg-blue-50 transition-all duration-200 transform hover:scale-110"
-              >
-                <Settings className={`w-5 h-5 ${showSettings ? 'animate-spin' : ''}`} />
-              </button>
-              <button
-                onClick={logout}
-                className="p-2 text-gray-400 hover:text-red-600 rounded-lg hover:bg-red-50 transition-all duration-200 transform hover:scale-110"
-              >
-                <LogOut className="w-5 h-5" />
-              </button>
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={() => setShowSettings(!showSettings)}
+                  className="btn-premium p-3 text-gray-600 hover:text-blue-600 bg-white/50 hover:bg-white/80 border border-white/20 rounded-xl transition-all duration-200 transform hover:scale-110"
+                  title="Settings"
+                >
+                  <Settings className={`w-5 h-5 ${showSettings ? 'animate-spin' : ''}`} />
+                </button>
+                <button
+                  onClick={logout}
+                  className="btn-premium p-3 text-gray-600 hover:text-red-600 bg-white/50 hover:bg-red-50 border border-white/20 rounded-xl transition-all duration-200 transform hover:scale-110"
+                  title="Logout"
+                >
+                  <LogOut className="w-5 h-5" />
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Premium Main Content */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10">
         {showSettings ? (
           <div className="max-w-2xl mx-auto animate-fade-in">
             <div className="mb-6">
@@ -158,11 +169,15 @@ const AppContent: React.FC = () => {
               </div>
             )}
 
+            {/* Horizontal Dashboard */}
+            <div className="mb-8 animate-fade-in">
+              <UserDashboard />
+            </div>
+
             {/* Main Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-stagger-in">
-              {/* Left Column */}
+              {/* Left Column - Bid Form */}
               <div className="space-y-6">
-                <UserDashboard />
                 <BidForm
                   onPlaceBid={placeBid}
                   highestBid={state.highestBid}

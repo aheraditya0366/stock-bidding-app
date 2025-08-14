@@ -7,7 +7,6 @@ import {
   Award,
   Phone,
   Mail,
-  Calendar,
   Activity
 } from 'lucide-react';
 import { useAuction } from '../../context/AuctionContext';
@@ -58,168 +57,139 @@ const UserDashboard: React.FC = () => {
   ];
 
   return (
-    <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-gray-200 hover:border-blue-300 transform hover:-translate-y-1">
+    <div className="card-premium p-6 hover:shadow-premium-lg transition-all duration-500 border-2 border-white/30 hover:border-green-300/50">
+      {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold text-gray-900 hover:text-blue-600 transition-colors duration-200">Dashboard</h3>
-        <div className="flex items-center space-x-2 bg-green-50 px-2 py-1 rounded-full">
-          <div className="w-2 h-2 bg-green-500 rounded-full animate-ping"></div>
+        <h3 className="text-xl font-bold text-gray-900 hover:text-blue-600 transition-colors duration-200 text-shadow">Dashboard</h3>
+        <div className="flex items-center space-x-2 glass-effect px-3 py-2 rounded-premium border border-green-200/50">
+          <div className="w-3 h-3 bg-green-500 rounded-full animate-ping"></div>
           <span className="text-xs text-green-600 font-medium">Live</span>
         </div>
       </div>
 
-      {/* User Info */}
-      <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-200">
-        <div className="flex items-center space-x-4">
-          <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-            <User className="w-6 h-6 text-white" />
-          </div>
-          <div className="flex-1">
-            <h4 className="font-semibold text-gray-900">{state.user.displayName}</h4>
-            <div className="flex items-center space-x-4 text-sm text-gray-600">
-              <div className="flex items-center space-x-1">
-                <Mail className="w-4 h-4" />
-                <span>{state.user.email}</span>
+      {/* Horizontal Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+
+        {/* User Info Section */}
+        <div className="lg:col-span-1">
+          <div className="p-4 glass-effect rounded-premium border border-white/20">
+            <div className="flex flex-col items-center text-center">
+              <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mb-3 shadow-lg">
+                <User className="w-8 h-8 text-white" />
               </div>
-              {state.user.phoneNumber && (
-                <div className="flex items-center space-x-1">
-                  <Phone className="w-4 h-4" />
-                  <span>{state.user.phoneNumber}</span>
+              <h4 className="font-bold text-gray-900 text-lg mb-1">{state.user.displayName}</h4>
+              <div className="text-xs text-gray-600 space-y-1">
+                <div className="flex items-center justify-center space-x-1">
+                  <Mail className="w-3 h-3" />
+                  <span className="truncate max-w-32">{state.user.email}</span>
                 </div>
-              )}
-            </div>
-            <div className="flex items-center space-x-1 text-xs text-gray-500 mt-1">
-              <Calendar className="w-3 h-3" />
-              <span>Member since {new Date(state.user.createdAt || Date.now()).toLocaleDateString()}</span>
+                {state.user.phoneNumber && (
+                  <div className="flex items-center justify-center space-x-1">
+                    <Phone className="w-3 h-3" />
+                    <span>{state.user.phoneNumber}</span>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Profit/Loss Display */}
-      <div className="mb-6">
-        <div className={`p-4 rounded-lg border-2 transition-all duration-300 hover:shadow-lg transform hover:scale-[1.02] ${
-          state.userProfitLoss >= 0
-            ? 'bg-green-50 border-green-200 hover:bg-green-100'
-            : 'bg-red-50 border-red-200 hover:bg-red-100'
-        } ${state.userProfitLoss >= 0 ? 'animate-glow' : ''}`}>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600 mb-1 font-medium">Total Profit/Loss</p>
-              <p className={`text-2xl font-bold transition-all duration-200 hover:scale-110 cursor-default ${
+        {/* Profit/Loss Section */}
+        <div className="lg:col-span-1">
+          <div className={`p-4 rounded-premium border-2 transition-all duration-300 hover:shadow-lg ${
+            state.userProfitLoss >= 0
+              ? 'bg-green-50 border-green-200 hover:bg-green-100'
+              : 'bg-red-50 border-red-200 hover:bg-red-100'
+          } ${state.userProfitLoss >= 0 ? 'animate-glow' : ''}`}>
+            <div className="text-center">
+              <div className={`inline-flex p-3 rounded-full mb-3 ${
+                state.userProfitLoss >= 0 ? 'bg-green-100' : 'bg-red-100'
+              }`}>
+                {state.userProfitLoss >= 0 ? (
+                  <TrendingUp className="w-6 h-6 text-green-600 animate-bounce" />
+                ) : (
+                  <TrendingDown className="w-6 h-6 text-red-600 animate-pulse" />
+                )}
+              </div>
+              <p className="text-xs text-gray-600 mb-1 font-medium">Total P&L</p>
+              <p className={`text-xl font-bold ${
                 state.userProfitLoss >= 0 ? 'text-green-600' : 'text-red-600'
               }`}>
                 {state.userProfitLoss >= 0 ? '+' : ''}{formatCurrency(state.userProfitLoss)}
               </p>
             </div>
-            <div className={`p-3 rounded-full transition-all duration-200 transform hover:scale-110 hover:rotate-12 ${
-              state.userProfitLoss >= 0 ? 'bg-green-100 hover:bg-green-200' : 'bg-red-100 hover:bg-red-200'
-            }`}>
-              {state.userProfitLoss >= 0 ? (
-                <TrendingUp className="w-6 h-6 text-green-600 animate-bounce" />
-              ) : (
-                <TrendingDown className="w-6 h-6 text-red-600 animate-pulse" />
-              )}
-            </div>
-          </div>
-          <div className="mt-2 text-xs text-gray-500 font-medium">
-            {state.userProfitLoss >= 0 ? '📈 Great trading! Keep it up!' : '📉 Keep going, every trader has ups and downs!'}
           </div>
         </div>
-      </div>
 
-      {/* Trading Stats */}
-      <div className="grid grid-cols-2 gap-4 mb-6">
-        {stats.map((stat, index) => (
-          <div key={index} className="p-3 bg-gray-50 rounded-lg">
-            <div className="flex items-center justify-between">
+        {/* Trading Stats Section */}
+        <div className="lg:col-span-2">
+          <div className="grid grid-cols-2 gap-3">
+            {stats.map((stat, index) => (
+              <div key={index} className="p-4 glass-effect rounded-premium border border-white/20 hover:shadow-md transition-all duration-200">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-xs text-gray-600 mb-1 font-medium">{stat.label}</p>
+                    <p className="text-lg font-bold text-gray-900">{stat.value}</p>
+                  </div>
+                  <div className={`p-2 rounded-full ${stat.bgColor} shadow-sm`}>
+                    <stat.icon className={`w-4 h-4 ${stat.color}`} />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Quick Financial Summary */}
+          <div className="mt-4 p-3 glass-effect rounded-premium border border-white/20">
+            <div className="grid grid-cols-3 gap-4 text-center">
               <div>
-                <p className="text-xs text-gray-600 mb-1">{stat.label}</p>
-                <p className="text-lg font-bold text-gray-900">{stat.value}</p>
+                <p className="text-xs text-gray-600 mb-1">Total Volume</p>
+                <p className="text-sm font-bold text-gray-900">{formatCurrency(totalVolume)}</p>
               </div>
-              <div className={`p-2 rounded-full ${stat.bgColor}`}>
-                <stat.icon className={`w-4 h-4 ${stat.color}`} />
+              <div>
+                <p className="text-xs text-gray-600 mb-1">Avg Bid</p>
+                <p className="text-sm font-bold text-gray-900">{formatCurrency(averageBidAmount)}</p>
+              </div>
+              <div>
+                <p className="text-xs text-gray-600 mb-1">Success Rate</p>
+                <p className="text-sm font-bold text-gray-900">
+                  {userBids.length > 0 ? Math.round((activeBids.length / userBids.length) * 100) : 0}%
+                </p>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Financial Summary */}
-      <div className="space-y-3">
-        <h4 className="text-sm font-medium text-gray-700">Financial Summary</h4>
-        
-        <div className="space-y-2">
-          <div className="flex justify-between items-center text-sm">
-            <span className="text-gray-600">Total Volume</span>
-            <span className="font-medium text-gray-900">{formatCurrency(totalVolume)}</span>
-          </div>
-          
-          <div className="flex justify-between items-center text-sm">
-            <span className="text-gray-600">Average Bid</span>
-            <span className="font-medium text-gray-900">{formatCurrency(averageBidAmount)}</span>
-          </div>
-          
-          <div className="flex justify-between items-center text-sm">
-            <span className="text-gray-600">Success Rate</span>
-            <span className="font-medium text-gray-900">
-              {userBids.length > 0 ? Math.round((activeBids.length / userBids.length) * 100) : 0}%
-            </span>
-          </div>
-          
-          <div className="flex justify-between items-center text-sm">
-            <span className="text-gray-600">Buy/Sell Ratio</span>
-            <span className="font-medium text-gray-900">
-              {buyBids.length}:{sellBids.length}
-            </span>
           </div>
         </div>
       </div>
 
-      {/* Performance Indicator */}
-      <div className="mt-6 pt-4 border-t border-gray-200">
-        <div className="flex items-center justify-between">
-          <span className="text-sm text-gray-600">Trading Performance</span>
-          <div className="flex items-center space-x-2">
+      {/* Performance Summary - Bottom Row */}
+      <div className="mt-6 pt-4 border-t border-gray-200/50">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+
+          {/* Performance Indicator */}
+          <div className="flex items-center justify-center space-x-3 p-3 glass-effect rounded-premium border border-white/20">
             {state.userProfitLoss >= 0 ? (
               <>
-                <Award className="w-4 h-4 text-yellow-500" />
-                <span className="text-sm font-medium text-green-600">Profitable</span>
+                <Award className="w-5 h-5 text-yellow-500" />
+                <span className="text-sm font-semibold text-green-600">Profitable Trader</span>
               </>
             ) : (
               <>
-                <TrendingDown className="w-4 h-4 text-red-500" />
-                <span className="text-sm font-medium text-red-600">Learning</span>
+                <TrendingDown className="w-5 h-5 text-red-500" />
+                <span className="text-sm font-semibold text-red-600">Learning Phase</span>
               </>
             )}
           </div>
-        </div>
-        
-        {/* Performance Bar */}
-        <div className="mt-2 w-full bg-gray-200 rounded-full h-2">
-          <div 
-            className={`h-2 rounded-full transition-all duration-500 ${
-              state.userProfitLoss >= 0 ? 'bg-green-500' : 'bg-red-500'
-            }`}
-            style={{ 
-              width: `${Math.min(100, Math.max(10, Math.abs(state.userProfitLoss) / 100 * 100))}%` 
-            }}
-          ></div>
-        </div>
-      </div>
 
-      {/* Quick Actions */}
-      <div className="mt-6 pt-4 border-t border-gray-200">
-        <h4 className="text-sm font-medium text-gray-700 mb-3">Quick Stats</h4>
-        <div className="grid grid-cols-2 gap-2 text-xs">
-          <div className="text-center p-2 bg-blue-50 rounded">
-            <div className="font-bold text-blue-600">{state.bids.length}</div>
-            <div className="text-gray-600">Market Bids</div>
+          {/* Buy/Sell Ratio */}
+          <div className="text-center p-3 glass-effect rounded-premium border border-white/20">
+            <p className="text-xs text-gray-600 mb-1">Buy/Sell Ratio</p>
+            <p className="text-lg font-bold text-gray-900">{buyBids.length}:{sellBids.length}</p>
           </div>
-          <div className="text-center p-2 bg-purple-50 rounded">
-            <div className="font-bold text-purple-600">
-              {state.auction?.participants.length || 0}
-            </div>
-            <div className="text-gray-600">Participants</div>
+
+          {/* Market Activity */}
+          <div className="text-center p-3 glass-effect rounded-premium border border-white/20">
+            <p className="text-xs text-gray-600 mb-1">Market Activity</p>
+            <p className="text-lg font-bold text-blue-600">{state.bids.length} bids</p>
           </div>
         </div>
       </div>

@@ -70,7 +70,7 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 p-6 border border-gray-200 hover:border-blue-300 transform hover:-translate-y-1 hover:scale-[1.02]">
+    <div className="card-premium p-8 hover:shadow-premium-lg transition-all duration-500 transform hover:-translate-y-2 border-2 border-white/30 hover:border-blue-300/50 hover:scale-[1.02]">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center space-x-3">
