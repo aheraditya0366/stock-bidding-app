@@ -504,6 +504,7 @@ export const AuctionProvider: React.FC<AuctionProviderProps> = ({ children }) =>
         userId: state.user.uid,
         userName: state.user.displayName || state.user.email || 'Anonymous',
         amount,
+        quantity,
         type,
         timestamp: Date.now(),
         stockSymbol: state.stock.symbol
@@ -554,6 +555,7 @@ export const AuctionProvider: React.FC<AuctionProviderProps> = ({ children }) =>
           userId: state.user!.uid,
           userName: state.user!.displayName || state.user!.email || 'Anonymous',
           amount,
+          quantity,
           type,
           timestamp: Date.now(),
           stockSymbol: state.stock.symbol,

@@ -57,15 +57,25 @@ const UserDashboard: React.FC = () => {
   ];
 
   return (
-    <div className="card-premium p-6 hover:shadow-premium-lg transition-all duration-500 border-2 border-white/30 hover:border-green-300/50">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <h3 className="text-xl font-bold text-gray-900 hover:text-blue-600 transition-colors duration-200 text-shadow">Dashboard</h3>
-        <div className="flex items-center space-x-2 glass-effect px-3 py-2 rounded-premium border border-green-200/50">
-          <div className="w-3 h-3 bg-green-500 rounded-full animate-ping"></div>
-          <span className="text-xs text-green-600 font-medium">Live</span>
+    <div className="card-premium p-6 hover:shadow-premium-lg transition-all duration-500 border-2 border-white/30 hover:border-green-300/50 relative overflow-hidden">
+      {/* Decorative Background */}
+      <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-br from-green-400/10 to-blue-400/10 rounded-full blur-xl animate-float"></div>
+      <div className="absolute bottom-0 left-0 w-36 h-36 bg-gradient-to-tr from-purple-400/10 to-pink-400/10 rounded-full blur-xl animate-float delay-1000"></div>
+
+      <div className="relative z-10">
+        {/* Enhanced Header */}
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-gradient-to-r from-green-500 via-blue-500 to-purple-600 rounded-2xl flex items-center justify-center animate-pulse-glow">
+              <User className="w-6 h-6 text-white" />
+            </div>
+            <h3 className="text-2xl font-bold bg-gradient-to-r from-green-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">Trading Dashboard</h3>
+          </div>
+          <div className="flex items-center space-x-2 glass-effect px-4 py-2 rounded-full border border-green-200/50 bg-green-50/50">
+            <div className="w-3 h-3 bg-green-500 rounded-full animate-ping"></div>
+            <span className="text-sm text-green-600 font-semibold">Live Market</span>
+          </div>
         </div>
-      </div>
 
       {/* Horizontal Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
@@ -192,6 +202,7 @@ const UserDashboard: React.FC = () => {
             <p className="text-lg font-bold text-blue-600">{state.bids.length} bids</p>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

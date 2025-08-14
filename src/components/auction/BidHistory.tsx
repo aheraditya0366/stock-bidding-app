@@ -5,7 +5,8 @@ interface Bid {
   id: string;
   userId: string;
   userName: string;
-  amount: number;
+  amount: number; // Price per share
+  quantity?: number; // Number of shares/units
   type: 'buy' | 'sell';
   timestamp: number;
   stockSymbol: string;
@@ -97,18 +98,26 @@ const BidHistory: React.FC<BidHistoryProps> = ({
 
   const userBids = bids.filter(bid => bid.userId === currentUserId);
   const totalUserBids = userBids.length;
-  const totalUserVolume = userBids.reduce((sum, bid) => sum + bid.amount, 0);
+  const totalUserVolume = userBids.reduce((sum, bid) => sum + (bid.quantity || 1), 0);
+  const totalUserValue = userBids.reduce((sum, bid) => sum + (bid.amount * (bid.quantity || 1)), 0);
   const totalProfitLoss = userBids.reduce((sum, bid) => sum + (bid.profitLoss || 0), 0);
 
   return (
-    <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-gray-200 hover:border-blue-300 transform hover:-translate-y-1">
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center space-x-2">
-          <History className="w-5 h-5 text-blue-600 animate-pulse" />
-          <h3 className="text-lg font-semibold text-gray-900 hover:text-blue-600 transition-colors duration-200">
-            {showUserOnly ? 'Your Bid History' : 'Bid History'}
-          </h3>
-        </div>
+    <div className="card-premium p-6 hover:shadow-xl transition-all duration-300 border border-blue-200/50 hover:border-blue-300 transform hover:-translate-y-1 flex flex-col relative overflow-hidden" style={{ height: '500px' }}>
+      {/* Decorative Background */}
+      <div className="absolute top-0 right-0 w-36 h-36 bg-gradient-to-br from-blue-400/10 to-purple-400/10 rounded-full blur-xl animate-float"></div>
+      <div className="absolute bottom-0 left-0 w-28 h-28 bg-gradient-to-tr from-indigo-400/10 to-pink-400/10 rounded-full blur-xl animate-float delay-1000"></div>
+
+      <div className="relative z-10 flex flex-col h-full">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center space-x-3">
+            <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center animate-pulse-glow">
+              <History className="w-5 h-5 text-white animate-pulse" />
+            </div>
+            <h3 className="text-xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
+              {showUserOnly ? 'Your Trading History' : 'Trading History'}
+            </h3>
+          </div>
         <div className="flex items-center space-x-2">
           <Filter className="w-4 h-4 text-gray-500" />
           <select
@@ -128,14 +137,18 @@ const BidHistory: React.FC<BidHistoryProps> = ({
       {(showUserOnly || filter === 'user') && currentUserId && (
         <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-200">
           <h4 className="text-sm font-medium text-gray-700 mb-3">Your Trading Summary</h4>
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-4 gap-3">
             <div className="text-center">
               <p className="text-lg font-bold text-gray-900">{totalUserBids}</p>
               <p className="text-xs text-gray-600">Total Bids</p>
             </div>
             <div className="text-center">
-              <p className="text-lg font-bold text-gray-900">{formatCurrency(totalUserVolume)}</p>
-              <p className="text-xs text-gray-600">Total Volume</p>
+              <p className="text-lg font-bold text-blue-600">{totalUserVolume.toLocaleString()}</p>
+              <p className="text-xs text-gray-600">Shares</p>
+            </div>
+            <div className="text-center">
+              <p className="text-lg font-bold text-purple-600">{formatCurrency(totalUserValue)}</p>
+              <p className="text-xs text-gray-600">Total Value</p>
             </div>
             <div className="text-center">
               <p className={`text-lg font-bold ${totalProfitLoss >= 0 ? 'text-green-600' : 'text-red-600'}`}>
@@ -147,19 +160,20 @@ const BidHistory: React.FC<BidHistoryProps> = ({
         </div>
       )}
 
-      {/* Bid List */}
-      {filteredBids.length === 0 ? (
-        <div className="text-center py-8">
-          <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <History className="w-8 h-8 text-gray-400" />
+      {/* Scrollable Bid List */}
+      <div className="flex-1 overflow-hidden">
+        {filteredBids.length === 0 ? (
+          <div className="text-center py-8">
+            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <History className="w-8 h-8 text-gray-400" />
+            </div>
+            <p className="text-gray-600 font-medium">No bids found</p>
+            <p className="text-sm text-gray-500 mt-1">
+              {filter === 'user' ? 'You haven\'t placed any bids yet' : 'No bids match your filter'}
+            </p>
           </div>
-          <p className="text-gray-600 font-medium">No bids found</p>
-          <p className="text-sm text-gray-500 mt-1">
-            {filter === 'user' ? 'You haven\'t placed any bids yet' : 'No bids match your filter'}
-          </p>
-        </div>
-      ) : (
-        <div className="space-y-3">
+        ) : (
+          <div className="overflow-y-auto pr-2 space-y-3" style={{ height: '300px' }}>
           {filteredBids.map((bid) => {
             const isCurrentUser = bid.userId === currentUserId;
             const isExpanded = showDetails === bid.id;
@@ -259,17 +273,19 @@ const BidHistory: React.FC<BidHistoryProps> = ({
               </div>
             );
           })}
-        </div>
-      )}
+          </div>
+        )}
+      </div>
 
       {/* Load More Button */}
       {filteredBids.length === 20 && (
-        <div className="text-center mt-6">
+        <div className="text-center mt-6 pt-4 border-t border-gray-200">
           <button className="text-blue-600 hover:text-blue-800 text-sm font-medium">
             Load More History
           </button>
         </div>
       )}
+      </div>
     </div>
   );
 };

@@ -53,7 +53,8 @@ export interface Bid {
   id: string;
   userId: string;
   userName: string;
-  amount: number;
+  amount: number; // Price per share
+  quantity: number; // Number of shares/units
   type: 'buy' | 'sell';
   timestamp: number;
   stockSymbol: string;
@@ -425,6 +426,7 @@ class FirebaseService {
           userId: data.userId,
           userName: data.userName,
           amount: data.amount,
+          quantity: data.quantity || 1, // Default to 1 for backward compatibility
           type: data.type,
           timestamp: data.timestamp?.toDate?.()?.getTime() || Date.now(),
           stockSymbol: data.stockSymbol || stockSymbol
@@ -468,6 +470,7 @@ class FirebaseService {
             userId: data.userId,
             userName: data.userName,
             amount: data.amount,
+            quantity: data.quantity || 1, // Default to 1 for backward compatibility
             type: data.type,
             timestamp: data.timestamp?.toDate?.()?.getTime() || Date.now(),
             stockSymbol: data.stockSymbol || stockSymbol

@@ -70,18 +70,24 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
   };
 
   return (
-    <div className="card-premium p-8 hover:shadow-premium-lg transition-all duration-500 transform hover:-translate-y-2 border-2 border-white/30 hover:border-blue-300/50 hover:scale-[1.02]">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center space-x-3">
-          <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-lg transform hover:scale-110 transition-all duration-200 hover:rotate-12">
-            <DollarSign className="w-6 h-6 text-white animate-pulse" />
+    <div className="card-premium p-8 hover:shadow-premium-lg transition-all duration-500 transform hover:-translate-y-2 border-2 border-white/30 hover:border-blue-300/50 hover:scale-[1.02] relative overflow-hidden">
+      {/* Decorative Background Elements */}
+      <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-green-400/10 to-blue-400/10 rounded-full blur-xl animate-float"></div>
+      <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-purple-400/10 to-pink-400/10 rounded-full blur-xl animate-float delay-1000"></div>
+
+      <div className="relative z-10">
+        {/* Enhanced Header */}
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center space-x-4">
+            <div className="relative w-14 h-14 bg-gradient-to-r from-blue-500 via-purple-600 to-pink-600 rounded-2xl flex items-center justify-center shadow-xl transform hover:scale-110 transition-all duration-300 hover:rotate-12">
+              <DollarSign className="w-7 h-7 text-white animate-pulse relative z-10" />
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-400 rounded-2xl blur opacity-50 animate-pulse"></div>
+            </div>
+            <div>
+              <h3 className="text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent cursor-default">{stock.symbol}</h3>
+              <p className="text-sm text-gray-600 font-semibold bg-gray-100 px-3 py-1 rounded-full">{stock.name}</p>
+            </div>
           </div>
-          <div>
-            <h3 className="text-xl font-bold text-gray-900 hover:text-blue-600 transition-colors duration-200 cursor-default">{stock.symbol}</h3>
-            <p className="text-sm text-gray-600 hover:text-gray-800 transition-colors duration-200">{stock.name}</p>
-          </div>
-        </div>
         <div className={`px-3 py-1 rounded-full text-xs font-medium transition-all duration-300 ${getStatusColor()}`}>
           {isActive ? (
             <span className="flex items-center space-x-1">
@@ -203,6 +209,7 @@ const AuctionCard: React.FC<AuctionCardProps> = ({
           )}
         </div>
       )}
+      </div>
     </div>
   );
 };

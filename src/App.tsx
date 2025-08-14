@@ -23,6 +23,7 @@ import {
 import WhatsAppDiagnostics from './components/WhatsAppDiagnostics';
 import InvoiceModal from './components/InvoiceModal';
 import AnimatedBackground from './components/ui/AnimatedBackground';
+import TopBids from './components/auction/TopBids';
 
 // Main App Content Component
 const AppContent: React.FC = () => {
@@ -89,24 +90,32 @@ const AppContent: React.FC = () => {
 
   // Main auction interface
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 relative overflow-hidden">
       {/* Animated Background */}
       <AnimatedBackground />
 
-      {/* Premium Background Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-blue-500/5 pointer-events-none"></div>
+      {/* Premium Background Overlay with Enhanced Gradients */}
+      <div className="absolute inset-0 bg-gradient-to-br from-white/30 via-blue-100/20 to-purple-100/30 pointer-events-none"></div>
+
+      {/* Floating Orbs for Visual Appeal */}
+      <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-blue-400/20 to-purple-400/20 rounded-full blur-xl animate-pulse"></div>
+      <div className="absolute top-40 right-20 w-24 h-24 bg-gradient-to-r from-pink-400/20 to-orange-400/20 rounded-full blur-xl animate-pulse delay-1000"></div>
+      <div className="absolute bottom-20 left-1/3 w-40 h-40 bg-gradient-to-r from-indigo-400/20 to-blue-400/20 rounded-full blur-xl animate-pulse delay-2000"></div>
       {/* Premium Header */}
-      <header className="glass-effect border-b border-white/20 sticky top-0 z-50 shadow-premium">
+      <header className="glass-effect border-b border-white/30 sticky top-0 z-50 shadow-premium backdrop-blur-xl bg-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             {/* Enhanced Logo */}
             <div className="flex items-center space-x-4 group">
-              <div className="w-12 h-12 bg-gradient-to-r from-blue-500 via-purple-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-premium transform group-hover:scale-110 transition-all duration-300 group-hover:rotate-12">
-                <DollarSign className="w-7 h-7 text-white animate-pulse" />
+              <div className="relative w-12 h-12 bg-gradient-to-r from-blue-500 via-purple-600 to-pink-600 rounded-2xl flex items-center justify-center shadow-premium transform group-hover:scale-110 transition-all duration-300 group-hover:rotate-12">
+                <DollarSign className="w-7 h-7 text-white animate-pulse relative z-10" />
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-400 rounded-2xl blur opacity-50 animate-pulse"></div>
               </div>
               <div>
-                <h1 className="text-2xl font-bold gradient-text text-shadow cursor-default">Stock Auction</h1>
-                <p className="text-sm text-gray-600 font-medium">Professional Trading Platform</p>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent cursor-default">
+                  Stock Auction Pro
+                </h1>
+                <p className="text-sm text-gray-600 font-medium">Professional Trading Platform • Live Market</p>
               </div>
             </div>
 
@@ -174,10 +183,10 @@ const AppContent: React.FC = () => {
               <UserDashboard />
             </div>
 
-            {/* Main Grid */}
+            {/* Main Grid with Fixed Heights */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-stagger-in">
-              {/* Left Column - Bid Form */}
-              <div className="space-y-6">
+              {/* Left Column - Bid Form Only */}
+              <div>
                 <BidForm
                   onPlaceBid={placeBid}
                   highestBid={state.highestBid}
@@ -190,7 +199,7 @@ const AppContent: React.FC = () => {
                 />
               </div>
 
-              {/* Middle Column */}
+              {/* Middle Column - Auction Card and Buy/Sell Orders */}
               <div className="space-y-6">
                 <AuctionCard
                   stock={state.stock}
@@ -206,8 +215,12 @@ const AppContent: React.FC = () => {
                 />
               </div>
 
-              {/* Right Column */}
+              {/* Right Column - Top Bids above Bid History */}
               <div className="space-y-6">
+                <TopBids
+                  bids={state.bids}
+                  currentUserId={state.user.uid}
+                />
                 <BidHistory
                   bids={state.bids}
                   currentUserId={state.user.uid}
@@ -287,3 +300,4 @@ const App: React.FC = () => {
 };
 
 export default App;
+

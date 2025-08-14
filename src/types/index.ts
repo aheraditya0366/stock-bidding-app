@@ -17,7 +17,8 @@ export interface Bid {
   id: string;
   userId: string;
   userName: string;
-  amount: number;
+  amount: number; // Price per share
+  quantity: number; // Number of shares/units
   type: 'buy' | 'sell';
   timestamp: number;
   stockSymbol: string;

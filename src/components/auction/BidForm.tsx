@@ -144,11 +144,18 @@ const BidForm: React.FC<BidFormProps> = ({
   }
 
   return (
-    <div className="card-premium p-8 hover:shadow-premium-lg transition-all duration-500 transform hover:-translate-y-2 border-2 border-white/30 hover:border-blue-300/50">
-      <h3 className="text-xl font-bold text-gray-900 mb-8 flex items-center space-x-3 text-shadow">
-        <DollarSign className="w-6 h-6 text-blue-600 animate-pulse" />
-        <span>Place Bid</span>
-      </h3>
+    <div className="card-premium p-8 hover:shadow-premium-lg transition-all duration-500 transform hover:-translate-y-2 border-2 border-white/30 hover:border-blue-300/50 relative overflow-hidden">
+      {/* Decorative Background Elements */}
+      <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-400/10 to-purple-400/10 rounded-full blur-xl"></div>
+      <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-pink-400/10 to-orange-400/10 rounded-full blur-xl"></div>
+
+      <div className="relative z-10">
+        <h3 className="text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-8 flex items-center space-x-3">
+          <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center animate-pulse-glow">
+            <DollarSign className="w-5 h-5 text-white" />
+          </div>
+          <span>Place Your Bid</span>
+        </h3>
 
       {/* Enhanced Market Info */}
       <div className="mb-8 p-6 glass-effect rounded-premium border border-white/20 bg-gradient-to-r from-blue-50/50 to-purple-50/50">
@@ -376,6 +383,7 @@ const BidForm: React.FC<BidFormProps> = ({
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 };
